@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from study.models import study
+from study.models import study, Like
 from django.contrib.auth.models import User
 
 from django.db import models
@@ -14,17 +14,18 @@ from django.shortcuts import render,get_object_or_404, redirect
 # 메인앱의 모델에서 스토리,음악,일러스트 가져오기 
 from main.models import *
 
+
 def mypage(request,id):
     user = get_object_or_404(User,pk=id)
-    # my_study = study.objects.filter(study_member=user)
-    # my_study_request = study.objects.filter(study_member_request=user)
+    like_list = Like.objects.filter(user = user)
     context = {
         'user':user,
-        'my_study' : study.objects.filter(study_member=user),
+        'my_study' : study.objects.filter(writer=user),
         'my_study_request' : study.objects.filter(study_member_request=user),
         'profile_user':DetailView.model,
         'followings':user.profile.followings.all(), 
         'followers':user.profile.followers.all(),
+        'like_list' : like_list,
     }
     DetailView.context_object_name='profile_user'
     DetailView.model = User 

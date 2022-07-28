@@ -27,6 +27,23 @@ class study(models.Model):
     )  # 가입된 유저들
     is_over = models.BooleanField()
 
+#-----------------좋아요------------------#
+    like_user_set = models.ManyToManyField(User, blank=True, related_name='likes_user_set',through='Like')
+
+    @property
+    def like_count(self):
+        return self.like_user_set.count()
+
+
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    study = models.ForeignKey(study, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together =(('user', 'study'))
+#-----------------좋아요------------------#
+
 
 class member_request(models.Model):
     study = models.ForeignKey(study, on_delete=models.CASCADE)
