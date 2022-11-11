@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
+from main.models import Diary
 from .models import check, study, todo, notion, Daily
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -15,13 +16,11 @@ from .models import Like
 from django.contrib.auth.decorators import login_required
 import json
 
-
 @require_POST
 @login_required
 def like_toggle(request, study_id):
-    Study = get_object_or_404(study, pk=study_id)
-    study_like, study_like_created = Like.objects.get_or_create(
-        user=request.user, study=Study)
+    Study = get_object_or_404(study, pk = study_id)
+    study_like, study_like_created = Like.objects.get_or_create(user=request.user, study=Study)
 
     if not study_like_created:
         study_like.delete()
@@ -29,10 +28,10 @@ def like_toggle(request, study_id):
     else:
         result = "like"
     context = {
-        "like_count": Study.like_count,
-        "result": result
+        "like_count" : Study.like_count,
+        "result" : result
     }
-    return HttpResponse(json.dumps(context), content_type="application/json")
+    return HttpResponse(json.dumps(context), content_type = "application/json")
 #-----------------좋아요------------------#
 
 
